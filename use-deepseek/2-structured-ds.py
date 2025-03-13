@@ -1,9 +1,10 @@
-import ollama
 import json
+import re
 
+import ollama
 from pydantic import BaseModel
 
-ai_model = 'deepseek-r1:8b'
+ai_model = 'qwen2.5-coder:14b'
 
 # --------------------------------------------------------------
 # Step 1: Define the response format in a Pydantic model
@@ -16,37 +17,31 @@ class CalendarEvent(BaseModel):
 
 
 # --------------------------------------------------------------
-# Step 2: Call the model and use Ollama to generate the response
+# Step 2: Call the model and ask it to respond in JSON
 # --------------------------------------------------------------
 
 # Define the prompt to extract event information
 prompt = """
-Extract the event information from the following text and return it into JSON object with the following keys: "name", "date", "participants" without the markdown format.
+System: Extract the event information from the following text and return the following keys: "name", "date", "participants". Response using JSON.
 
 Text: "Alice and Bob are going to a science fair on Friday."
 """
 
 response = ollama.generate(
     model=ai_model,  # Replace with the model you are using
-    prompt=prompt,
+    prompt=prompt
 )
 
 generated_content = response['response']
+print(generated_content)
 
 
 # --------------------------------------------------------------
-# Step 3:  Remove content between <think> and </think> tags and Markdown format
-# --------------------------------------------------------------
-
-clean_response = generated_content.split("</think>")[-1].strip()
-clean_json = clean_response.strip().replace("```json", "").replace("```", "").strip()
-
-# --------------------------------------------------------------
-# Step 4:# Parse the JSON response
+# Step 3: Parse the JSON response
 # --------------------------------------------------------------
 
 try:
-    event_data = json.loads(clean_json)
+    event_data = json.loads(generated_content)
     event = CalendarEvent(**event_data)
     event.name
     event.date
