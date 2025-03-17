@@ -89,9 +89,6 @@ target/
 # Exclude virtual environment
 .venv/
 
-# Exclude trained models
-models/
-
 # Exclude pyproject.toml
 pyproject.toml
 
@@ -100,3 +97,6 @@ uv.lock
 
 # Exclude LanceDB database
 lancedb/
+
+# Exclude temporary files
+temp/
