@@ -1,7 +1,7 @@
 import json
 import requests
 
-from ollama import chat, ChatResponse, generate
+from ollama import chat, ChatResponse
 from pydantic import BaseModel, Field
 
 
@@ -83,7 +83,6 @@ for tool_call in response.message.tool_calls:
     messages.append(
         {"role": "tool", "tool_call": tool_call.function.name, "content": json.dumps(result)}
     )
-    print(messages)
 
 # --------------------------------------------------------------
 # Step 5: Supply result and call model again
@@ -103,23 +102,13 @@ response_2 = chat(
     model=ai_model,  # Replace with the model you are using
     messages=messages,
     tools=tools,
-    # response_format=WeatherResponse,
+    format=WeatherResponse.model_json_schema(),
 )
-
-generated_content = response_2.message.content
-
-print(generated_content)
 
 # --------------------------------------------------------------
 # Step 5: Produce model response in the WeatherResponse format
 # --------------------------------------------------------------
 
-# TODO: Provide a way for the LLM to provide the weather report in this format
-# try:
-#     weather = WeatherResponse(**response_2)
-#     weather.temperature
-#     weather.response
-
-#     print(weather)
-# except json.JSONDecodeError as e:
-#     print(f"Failed to parse JSON: {e}")
+weather = WeatherResponse.model_validate_json(response_2.message.content)
+weather.temperature
+weather.response
