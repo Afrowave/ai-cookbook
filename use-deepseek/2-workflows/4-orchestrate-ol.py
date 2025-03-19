@@ -1,4 +1,3 @@
-import json
 import logging
 
 from typing import List, Dict
@@ -14,7 +13,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-ai_model = 'qwen2.5-coder:7b'
+ai_model = 'qwen2.5-coder:14b'
 
 
 # --------------------------------------------------------------
@@ -130,6 +129,7 @@ Target Audience: {audience}
 
 Sections:
 {sections}
+
 Provide a cohesion score between 0.0 and 1.0, suggested edits for each section if needed, and a final polished version of the complete post.
 
 The cohesion score should reflect how well the sections flow together, with 1.0 being perfect cohesion.
@@ -227,31 +227,27 @@ class BlogOrchestrator:
         return response.message.content
 
     def write_blog(self, topic: str, target_length: int = 1000, style: str = "informative") -> Dict:
-        # --> TODO:
-        # While this function produces a Python dictionary, it is breaking down into strings
-        # because the output would need to be formatted, getting rid of arbitrary `\n` in the output.
-        # -->
         """Process the entire blog writing task"""
-        logger.info(f"Starting blog writing process for: {topic}")
+        # logger.info(f"Starting blog writing process for: {topic}")
 
         # Get blog structure plan
         plan = self.get_plan(topic, target_length, style)
+        print(plan)
+        # logger.info(f"Blog structure planned: {len(plan.sections)} sections")
+        # logger.info(f"Blog structure planned: {
+        #             plan.model_dump_json(indent=2)}")
 
-        logger.info(f"Blog structure planned: {len(plan.sections)} sections")
-        logger.info(f"Blog structure planned: {
-                    plan.model_json_schema(indent=2)}")
+        # # Write each section
+        # for section in plan.sections:
+        #     logger.info(f"Writing section: {section.section_type}")
+        #     content = self.write_section(topic, section)
+        #     self.sections_content[section.section_type] = content
 
-        # Write each section
-        for section in plan.sections:
-            logger.info(f"Writing section: {section.section_type}")
-            content = self.write_section(topic, section)
-            self.sections_content[section.section_type] = content
+        # # Review and polish
+        # logger.info("Reviewing full blog post")
+        # review = self.review_post(topic, plan)
 
-        # Review and polish
-        logger.info("Reviewing full blog post")
-        review = self.review_post(topic, plan)
-
-        return {"structure": plan, "sections": self.sections_content, "review": review}
+        # return {"structure": plan, "sections": self.sections_content, "review": review}
 
 
 # --------------------------------------------------------------
@@ -267,11 +263,11 @@ if __name__ == "__main__":
         topic=topic, target_length=1200, style="technical but accessible"
     )
 
-    print("\nFinal Blog Post:")
-    print(result["review"].final_version)
+    # print("\nFinal Blog Post:")
+    # print(result["review"].final_version)
 
-    print("\nCohesion Score:", result["review"].cohesion_score)
-    if result["review"].suggested_edits:
-        for edit in result["review"].suggested_edits:
-            print(f"Section: {edit.section_name}")
-            print(f"Suggested Edit: {edit.suggested_edit}")
+    # print("\nCohesion Score:", result["review"].cohesion_score)
+    # if result["review"].suggested_edits:
+    #     for edit in result["review"].suggested_edits:
+    #         print(f"Section: {edit.section_name}")
+    #         print(f"Suggested Edit: {edit.suggested_edit}")
