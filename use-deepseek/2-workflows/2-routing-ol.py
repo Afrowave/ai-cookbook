@@ -28,7 +28,8 @@ class CalendarRequestType(BaseModel):
     request_type: Literal["new_event", "modify_event", "other"] = Field(
         description="Type of calendar request being made"
     )
-    confidence_score: float = Field(description="Confidence score between 0 and 1")
+    confidence_score: float = Field(
+        description="Confidence score between 0 and 1")
     description: str = Field(description="Cleaned description of the request")
 
 
@@ -61,8 +62,10 @@ class ModifyEventDetails(BaseModel):
         description="Description to identify the existing event"
     )
     changes: list[Change] = Field(description="List of changes to make")
-    participants_to_add: list[str] = Field(description="New participants to add")
-    participants_to_remove: list[str] = Field(description="Participants to remove")
+    participants_to_add: list[str] = Field(
+        description="New participants to add")
+    participants_to_remove: list[str] = Field(
+        description="Participants to remove")
 
 
 class CalendarResponse(BaseModel):
@@ -72,7 +75,8 @@ class CalendarResponse(BaseModel):
 
     success: bool = Field(description="Whether the operation was successful")
     message: str = Field(description="User-friendly response message")
-    calendar_link: Optional[str] = Field(description="Calendar link if applicable")
+    calendar_link: Optional[str] = Field(
+        description="Calendar link if applicable")
 
 
 # --------------------------------------------------------------
@@ -97,11 +101,14 @@ def route_calendar_request(user_input: str) -> CalendarRequestType:
     )
     result = CalendarRequestType.model_validate_json(response.message.content)
     logger.info(
-        f"Request routed as: {result.request_type} with confidence: {result.confidence_score}"
+        f"Request routed as: {result.request_type} with confidence: {
+            result.confidence_score}"
     )
     return result
 
 # New Event Handler
+
+
 def handle_new_event(description: str) -> CalendarResponse:
     """
     Process a new event request
@@ -113,7 +120,8 @@ def handle_new_event(description: str) -> CalendarResponse:
     response = chat(
         model=ai_model,
         messages=[
-            {"role": "system", "content": "Extract details for creating a new calendar event."},
+            {"role": "system",
+                "content": "Extract details for creating a new calendar event."},
             {"role": "user", "content": description},
         ],
         format=NewEventDetails.model_json_schema(),
@@ -125,11 +133,14 @@ def handle_new_event(description: str) -> CalendarResponse:
     # Generate response
     return CalendarResponse(
         success=True,
-        message=f"Created new event '{details.name}' for {details.date} with {', '.join(details.participants)}",
+        message=f"Created new event '{details.name}' for {
+            details.date} with {', '.join(details.participants)}",
         calendar_link=f"calendar://new?event={details.name}",
     )
 
 # Event Modifier
+
+
 def handle_modify_event(description: str) -> CalendarResponse:
     """
     Process an event modification request
@@ -153,11 +164,14 @@ def handle_modify_event(description: str) -> CalendarResponse:
     # Generate response
     return CalendarResponse(
         success=True,
-        message=f"Modified event '{details.event_identifier}' with the requested changes",
+        message=f"Modified event '{
+            details.event_identifier}' with the requested changes",
         calendar_link=f"calendar://modify?event={details.event_identifier}",
     )
 
 # Process Request
+
+
 def process_calendar_request(user_input: str) -> Optional[CalendarResponse]:
     """
     Main function implementing the routing workflow
@@ -170,7 +184,8 @@ def process_calendar_request(user_input: str) -> Optional[CalendarResponse]:
 
     # Check confidence threshold
     if route_result.confidence_score < 0.7:
-        logger.warning(f"Low confidence score: {route_result.confidence_score}")
+        logger.warning(f"Low confidence score: {
+                       route_result.confidence_score}")
         return None
 
     # Route to appropriate handler

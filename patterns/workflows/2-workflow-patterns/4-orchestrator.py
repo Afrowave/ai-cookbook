@@ -1,8 +1,9 @@
-from typing import List, Dict
-from pydantic import BaseModel, Field
-from openai import OpenAI
-import os
 import logging
+import os
+from typing import Dict, List
+
+from openai import OpenAI
+from pydantic import BaseModel, Field
 
 # Set up logging configuration
 logging.basicConfig(
