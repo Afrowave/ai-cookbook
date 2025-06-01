@@ -3,7 +3,7 @@ import json
 from ollama import chat, ChatResponse
 from pydantic import BaseModel, Field
 
-ai_model = 'qwen2.5-coder:14b'
+ai_model = 'qwen3:14b'
 
 # --------------------------------------------------------------
 # Define the knowledge base retrieval tool

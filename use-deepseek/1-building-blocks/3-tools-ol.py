@@ -5,7 +5,7 @@ from ollama import chat, ChatResponse
 from pydantic import BaseModel, Field
 
 
-ai_model = 'qwen2.5-coder:14b'
+ai_model = 'qwen3:14b'
 
 # --------------------------------------------------------------
 # Step 1: Define the tool (function) that we want to call

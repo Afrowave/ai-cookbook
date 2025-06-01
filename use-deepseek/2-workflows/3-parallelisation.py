@@ -15,7 +15,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-ai_model = 'qwen2.5-coder:14b'
+ai_model = 'qwen3:14b'
 
 
 # --------------------------------------------------------------

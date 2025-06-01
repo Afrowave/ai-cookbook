@@ -1,7 +1,7 @@
 from ollama import chat
 from pydantic import BaseModel
 
-ai_model = 'qwen2.5-coder:14b'
+ai_model = 'qwen3:14b'
 
 # --------------------------------------------------------------
 # Step 1: Define the response format in a Pydantic model

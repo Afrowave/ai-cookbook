@@ -1,0 +1,11 @@
+{
+  "typeCheckingMode": "basic",
+  "reportArgumentType": "warning",
+  "reportMissingImports": "none",
+  "reportReturnType": "warning",
+  "reportUnusedVariable": "warning",
+  "reportOperatorIssue": "warning",
+  "reportImportCycles": "none",
+  "reportDuplicateImport": "warning",
+  "ruler": 120
+}
